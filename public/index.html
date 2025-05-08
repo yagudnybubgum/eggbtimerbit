@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Egg Timer</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 40px; }
+    .timer { font-size: 48px; margin: 20px 0; }
+    .button { padding: 10px 20px; margin: 5px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>Egg Timer</h1>
+  <div class="timer" id="timer">00:00</div>
+  <button class="button" onclick="startTimer(180)">Soft (3 min)</button>
+  <button class="button" onclick="startTimer(300)">Medium (5 min)</button>
+  <button class="button" onclick="startTimer(420)">Hard (7 min)</button>
+  <button class="button" id="stopButton" onclick="stopTimer()" style="display:none;">Stop</button>
+  <script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+    let timerInterval, timeLeft;
+    function startTimer(seconds) {
+      timeLeft = seconds;
+      document.getElementById('stopButton').style.display = 'inline-block';
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          tg.sendData('Timer finished!');
+          document.getElementById('stopButton').style.display = 'none';
+        }
+      }, 1000);
+      updateDisplay();
+    }
+    function stopTimer() {
+      clearInterval(timerInterval);
+      document.getElementById('stopButton').style.display = 'none';
+      document.getElementById('timer').textContent = '00:00';
+    }
+    function updateDisplay() {
+      const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+      const s = String(timeLeft % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = `${m}:${s}`;
+    }
+  </script>
+</body>
+</html>
