@@ -6,8 +6,33 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body { font-family: Arial; text-align: center; margin-top: 40px; background-color: white; }
-    .timer { font-size: 48px; margin: 20px 0; }
-    .button { padding: 10px 20px; margin: 5px; font-size: 18px; }
+    .timer { font-size: 64px; margin: 40px 0 32px 0; font-weight: bold; letter-spacing: 2px; }
+    .button {
+      display: block;
+      width: 90vw;
+      max-width: 350px;
+      margin: 16px auto;
+      padding: 22px 0;
+      font-size: 28px;
+      border-radius: 16px;
+      border: none;
+      background: #007aff;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px #0001;
+      transition: background 0.2s;
+    }
+    .button:active {
+      background: #005bb5;
+    }
+    .button:disabled {
+      background: #d1d1d6;
+      color: #888;
+      box-shadow: none;
+    }
+    #stopButton { background: #ff3b30; }
+    #stopButton:active { background: #b71c1c; }
+    #stopButton:disabled { background: #ffd6d6; color: #aaa; }
   </style>
 </head>
 <body>
@@ -16,14 +41,14 @@
   <button class="button" onclick="startTimer(180)">Soft (3 min)</button>
   <button class="button" onclick="startTimer(300)">Medium (5 min)</button>
   <button class="button" onclick="startTimer(420)">Hard (7 min)</button>
-  <button class="button" id="stopButton" onclick="stopTimer()" style="display:none;">Stop</button>
+  <button class="button" id="stopButton" onclick="stopTimer()">Stop</button>
   <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
     let timerInterval, timeLeft;
     function startTimer(seconds) {
       timeLeft = seconds;
-      document.getElementById('stopButton').style.display = 'inline-block';
+      document.getElementById('stopButton').disabled = false;
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         timeLeft--;
@@ -31,14 +56,16 @@
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           tg.sendData('Timer finished!');
-          document.getElementById('stopButton').style.display = 'none';
+          document.getElementById('stopButton').disabled = true;
+          // Vibrate three times
+          navigator.vibrate([200, 100, 200, 100, 200]);
         }
       }, 1000);
       updateDisplay();
     }
     function stopTimer() {
       clearInterval(timerInterval);
-      document.getElementById('stopButton').style.display = 'none';
+      document.getElementById('stopButton').disabled = true;
       document.getElementById('timer').textContent = '00:00';
     }
     function updateDisplay() {
@@ -46,6 +73,8 @@
       const s = String(timeLeft % 60).padStart(2, '0');
       document.getElementById('timer').textContent = `${m}:${s}`;
     }
+    // Инициализация: кнопка стоп неактивна
+    document.getElementById('stopButton').disabled = true;
   </script>
 </body>
 </html>
