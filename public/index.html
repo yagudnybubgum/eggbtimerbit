@@ -47,7 +47,8 @@
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       gap: 20px;
-      padding: 0 20px;
+      padding: 20px;
+      margin: 0 -20px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
@@ -62,12 +63,22 @@
       background: white;
       border-radius: 16px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 2px rgba(0, 0, 0, 0.04);
+      margin: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transform: translateZ(0);
-      backface-visibility: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      z-index: -1;
     }
 
     .egg-image {
