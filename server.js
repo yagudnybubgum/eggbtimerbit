@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 const appUrl = process.env.APP_URL || 'https://eggbtimerbit.onrender.com';
 
 // Для webhook нужен bodyParser
