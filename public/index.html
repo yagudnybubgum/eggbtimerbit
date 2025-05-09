@@ -108,6 +108,8 @@
 
     .button.counting {
       background: #28cd41;
+      border-radius: 12px 12px 0 0;
+      margin-bottom: 0;
     }
 
     .button:disabled {
@@ -115,17 +117,32 @@
       color: #888;
     }
 
-    #stopButton {
-      margin-top: 20px;
+    .stop-button {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 18px;
       background: #ff3b30;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 0 0 12px 12px;
+      cursor: pointer;
+      display: none;
+      transition: all 0.2s;
     }
 
-    #stopButton:active {
+    .stop-button:active {
       background: #d63030;
     }
 
-    #stopButton:disabled {
-      background: #ffcdd2;
+    .stop-button.visible {
+      display: block;
+    }
+
+    .buttons-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
     }
   </style>
 </head>
@@ -139,7 +156,10 @@
         <div class="card-time">5 сек</div>
       </div>
       <p class="card-description">Проверка таймера</p>
-      <button class="button" id="buttonTest" onclick="startTimer(5, this)">Старт</button>
+      <div class="buttons-container">
+        <button class="button" id="buttonTest" onclick="startTimer(5, this)">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+      </div>
     </div>
 
     <div class="card">
@@ -149,7 +169,10 @@
         <div class="card-time">5 мин</div>
       </div>
       <p class="card-description">Жидкий желток и не очень твёрдый белок</p>
-      <button class="button" id="button5" onclick="startTimer(300, this)">Старт</button>
+      <div class="buttons-container">
+        <button class="button" id="button5" onclick="startTimer(300, this)">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+      </div>
     </div>
 
     <div class="card">
@@ -159,7 +182,10 @@
         <div class="card-time">7 мин</div>
       </div>
       <p class="card-description">Белок полностью схватился, а желток остался жидким</p>
-      <button class="button" id="button7" onclick="startTimer(420, this)">Старт</button>
+      <div class="buttons-container">
+        <button class="button" id="button7" onclick="startTimer(420, this)">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+      </div>
     </div>
 
     <div class="card">
@@ -169,11 +195,12 @@
         <div class="card-time">9 мин</div>
       </div>
       <p class="card-description">Белок и желток твёрдые</p>
-      <button class="button" id="button9" onclick="startTimer(540, this)">Старт</button>
+      <div class="buttons-container">
+        <button class="button" id="button9" onclick="startTimer(540, this)">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+      </div>
     </div>
   </div>
-  
-  <button class="button" id="stopButton" onclick="stopTimer()" disabled>Стоп</button>
 
   <script>
     let tg = window.Telegram.WebApp;
@@ -186,22 +213,21 @@
 
     function startTimer(seconds, buttonElement) {
       if (activeButton) {
-        activeButton.classList.remove('counting');
-        activeButton.textContent = 'Старт';
+        stopTimer(buttonElement.nextElementSibling);
       }
       
       timeLeft = seconds;
       activeButton = buttonElement;
-      document.getElementById('stopButton').disabled = false;
       
-      // Disable all buttons
-      document.querySelectorAll('.button').forEach(btn => {
-        if (btn.id !== 'stopButton') btn.disabled = true;
-      });
-      
-      // Enable and style the active button
-      buttonElement.disabled = false;
+      // Show stop button and update styles
+      const stopButton = buttonElement.nextElementSibling;
+      stopButton.classList.add('visible');
       buttonElement.classList.add('counting');
+      
+      // Disable other start buttons
+      document.querySelectorAll('.button').forEach(btn => {
+        if (btn !== buttonElement) btn.disabled = true;
+      });
       
       clearInterval(timerInterval);
       updateButtonDisplay();
@@ -212,7 +238,7 @@
         
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          resetButtons();
+          resetButtons(stopButton);
           fetch('/timer-complete', {
             method: 'POST',
             headers: {
@@ -225,17 +251,19 @@
       }, 1000);
     }
 
-    function stopTimer() {
+    function stopTimer(stopButton) {
       clearInterval(timerInterval);
-      resetButtons();
+      resetButtons(stopButton);
     }
 
-    function resetButtons() {
+    function resetButtons(stopButton) {
       if (activeButton) {
         activeButton.classList.remove('counting');
         activeButton.textContent = 'Старт';
       }
-      document.getElementById('stopButton').disabled = true;
+      // Hide stop button
+      stopButton.classList.remove('visible');
+      // Enable all start buttons
       document.querySelectorAll('.button').forEach(btn => {
         btn.disabled = false;
       });
