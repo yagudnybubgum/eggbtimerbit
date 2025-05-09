@@ -20,8 +20,24 @@
       flex-direction: column;
     }
 
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .lang-switch {
+      background: none;
+      border: none;
+      font-size: 16px;
+      color: #007AFF;
+      cursor: pointer;
+      padding: 8px;
+    }
+
     h1 {
-      margin: 0 0 20px 0;
+      margin: 0;
       font-size: 28px;
       color: #333;
     }
@@ -147,57 +163,61 @@
   </style>
 </head>
 <body>
-  <h1>Egg Boiler Room</h1>
+  <div class="header">
+    <h1 data-en="Egg Timer" data-ru="Таймер для яиц">Таймер для яиц</h1>
+    <button class="lang-switch" onclick="toggleLanguage()">EN</button>
+  </div>
+
   <div class="cards-container">
     <div class="card">
-      <img src="images/test-egg.jpg" alt="Тестовое яйцо" class="egg-image">
+      <img src="images/test-egg.jpg" alt="Test egg" class="egg-image">
       <div class="card-header">
-        <h2 class="card-title">Тест</h2>
-        <div class="card-time">5 сек</div>
+        <h2 class="card-title" data-en="Test" data-ru="Тест">Тест</h2>
+        <div class="card-time" data-en="5 sec" data-ru="5 сек">5 сек</div>
       </div>
-      <p class="card-description">Проверка таймера</p>
+      <p class="card-description" data-en="Timer test" data-ru="Проверка таймера">Проверка таймера</p>
       <div class="buttons-container">
-        <button class="button" id="buttonTest" onclick="startTimer(5, this)">Старт</button>
-        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+        <button class="button" id="buttonTest" onclick="startTimer(5, this)" data-en="Start" data-ru="Старт">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)" data-en="Stop" data-ru="Стоп">Стоп</button>
       </div>
     </div>
 
     <div class="card">
-      <img src="images/soft-boiled.jpg" alt="Яйцо всмятку" class="egg-image">
+      <img src="images/soft-boiled.jpg" alt="Soft boiled egg" class="egg-image">
       <div class="card-header">
-        <h2 class="card-title">Всмятку</h2>
-        <div class="card-time">5 мин</div>
+        <h2 class="card-title" data-en="Soft boiled" data-ru="Всмятку">Всмятку</h2>
+        <div class="card-time" data-en="5 min" data-ru="5 мин">5 мин</div>
       </div>
-      <p class="card-description">Жидкий желток и не очень твёрдый белок</p>
+      <p class="card-description" data-en="Liquid yolk and slightly firm white" data-ru="Жидкий желток и не очень твёрдый белок">Жидкий желток и не очень твёрдый белок</p>
       <div class="buttons-container">
-        <button class="button" id="button5" onclick="startTimer(300, this)">Старт</button>
-        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+        <button class="button" id="button5" onclick="startTimer(300, this)" data-en="Start" data-ru="Старт">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)" data-en="Stop" data-ru="Стоп">Стоп</button>
       </div>
     </div>
 
     <div class="card">
-      <img src="images/medium-boiled.jpg" alt="Яйцо в мешочек" class="egg-image">
+      <img src="images/medium-boiled.jpg" alt="Medium boiled egg" class="egg-image">
       <div class="card-header">
-        <h2 class="card-title">В мешочек</h2>
-        <div class="card-time">7 мин</div>
+        <h2 class="card-title" data-en="Medium boiled" data-ru="В мешочек">В мешочек</h2>
+        <div class="card-time" data-en="7 min" data-ru="7 мин">7 мин</div>
       </div>
-      <p class="card-description">Белок полностью схватился, а желток остался жидким</p>
+      <p class="card-description" data-en="Firm white and liquid yolk" data-ru="Белок полностью схватился, а желток остался жидким">Белок полностью схватился, а желток остался жидким</p>
       <div class="buttons-container">
-        <button class="button" id="button7" onclick="startTimer(420, this)">Старт</button>
-        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+        <button class="button" id="button7" onclick="startTimer(420, this)" data-en="Start" data-ru="Старт">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)" data-en="Stop" data-ru="Стоп">Стоп</button>
       </div>
     </div>
 
     <div class="card">
-      <img src="images/hard-boiled.jpg" alt="Яйцо вкрутую" class="egg-image">
+      <img src="images/hard-boiled.jpg" alt="Hard boiled egg" class="egg-image">
       <div class="card-header">
-        <h2 class="card-title">Вкрутую</h2>
-        <div class="card-time">9 мин</div>
+        <h2 class="card-title" data-en="Hard boiled" data-ru="Вкрутую">Вкрутую</h2>
+        <div class="card-time" data-en="9 min" data-ru="9 мин">9 мин</div>
       </div>
-      <p class="card-description">Белок и желток твёрдые</p>
+      <p class="card-description" data-en="Firm white and yolk" data-ru="Белок и желток твёрдые">Белок и желток твёрдые</p>
       <div class="buttons-container">
-        <button class="button" id="button9" onclick="startTimer(540, this)">Старт</button>
-        <button class="stop-button" onclick="stopTimer(this)">Стоп</button>
+        <button class="button" id="button9" onclick="startTimer(540, this)" data-en="Start" data-ru="Старт">Старт</button>
+        <button class="stop-button" onclick="stopTimer(this)" data-en="Stop" data-ru="Стоп">Стоп</button>
       </div>
     </div>
   </div>
@@ -207,13 +227,27 @@
     tg.expand();
     let timerInterval, timeLeft;
     let activeButton = null;
+    let currentLang = 'ru';
     
     const initData = new URLSearchParams(tg.initData);
     const chat_id = initData.get('user') ? JSON.parse(decodeURIComponent(initData.get('user'))).id : null;
 
+    function toggleLanguage() {
+      currentLang = currentLang === 'ru' ? 'en' : 'ru';
+      const langButton = document.querySelector('.lang-switch');
+      langButton.textContent = currentLang === 'ru' ? 'EN' : 'RU';
+      
+      // Update all translatable elements
+      document.querySelectorAll('[data-ru]').forEach(elem => {
+        if (!elem.classList.contains('counting')) { // Don't update timer display
+          elem.textContent = elem.getAttribute(`data-${currentLang}`);
+        }
+      });
+    }
+
     function startTimer(seconds, buttonElement) {
       if (activeButton) {
-        stopTimer(buttonElement.nextElementSibling);
+        stopTimer(activeButton.nextElementSibling);
       }
       
       timeLeft = seconds;
