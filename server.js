@@ -24,10 +24,11 @@ bot.onText(/\/start/, (msg) => {
 
 bot.onText(/\/timer/, (msg) => {
   const chatId = msg.chat.id;
+  const appUrl = process.env.APP_URL || 'https://eggbtimerbit.onrender.com';
   bot.sendMessage(chatId, 'Open the timer:', {
     reply_markup: {
       inline_keyboard: [[
-        { text: 'Open Timer', web_app: { url: 'https://YOUR-RENDER-URL.onrender.com' } }
+        { text: 'Open Timer', web_app: { url: appUrl } }
       ]]
     }
   });
