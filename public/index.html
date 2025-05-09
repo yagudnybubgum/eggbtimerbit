@@ -52,6 +52,21 @@
       gap: 10px;
     }
 
+    .egg-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
     .card-title {
       font-size: 24px;
       font-weight: 600;
@@ -59,25 +74,17 @@
       color: #333;
     }
 
-    .card-description {
-      color: #666;
-      font-size: 14px;
-      margin: 0;
-    }
-
     .card-time {
       color: #007AFF;
       font-size: 20px;
       font-weight: 600;
-      margin: 5px 0;
+      margin: 0;
     }
 
-    .egg-image {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 10px;
+    .card-description {
+      color: #666;
+      font-size: 14px;
+      margin: 0 0 10px 0;
     }
 
     .button {
@@ -125,34 +132,42 @@
   <h1>Egg Boiler Room</h1>
   <div class="cards-container">
     <div class="card">
-      <h2 class="card-title">Тест</h2>
       <img src="images/test-egg.jpg" alt="Тестовое яйцо" class="egg-image">
+      <div class="card-header">
+        <h2 class="card-title">Тест</h2>
+        <div class="card-time">5 сек</div>
+      </div>
       <p class="card-description">Проверка таймера</p>
-      <div class="card-time">5 сек</div>
       <button class="button" id="buttonTest" onclick="startTimer(5, this)">Старт</button>
     </div>
 
     <div class="card">
-      <h2 class="card-title">Всмятку</h2>
       <img src="images/soft-boiled.jpg" alt="Яйцо всмятку" class="egg-image">
+      <div class="card-header">
+        <h2 class="card-title">Всмятку</h2>
+        <div class="card-time">5 мин</div>
+      </div>
       <p class="card-description">Жидкий желток и не очень твёрдый белок</p>
-      <div class="card-time">5 мин</div>
       <button class="button" id="button5" onclick="startTimer(300, this)">Старт</button>
     </div>
 
     <div class="card">
-      <h2 class="card-title">В мешочек</h2>
       <img src="images/medium-boiled.jpg" alt="Яйцо в мешочек" class="egg-image">
+      <div class="card-header">
+        <h2 class="card-title">В мешочек</h2>
+        <div class="card-time">7 мин</div>
+      </div>
       <p class="card-description">Белок полностью схватился, а желток остался жидким</p>
-      <div class="card-time">7 мин</div>
       <button class="button" id="button7" onclick="startTimer(420, this)">Старт</button>
     </div>
 
     <div class="card">
-      <h2 class="card-title">Вкрутую</h2>
       <img src="images/hard-boiled.jpg" alt="Яйцо вкрутую" class="egg-image">
+      <div class="card-header">
+        <h2 class="card-title">Вкрутую</h2>
+        <div class="card-time">9 мин</div>
+      </div>
       <p class="card-description">Белок и желток твёрдые</p>
-      <div class="card-time">9 мин</div>
       <button class="button" id="button9" onclick="startTimer(540, this)">Старт</button>
     </div>
   </div>
