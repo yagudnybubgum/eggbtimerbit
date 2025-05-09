@@ -10,21 +10,17 @@ const appUrl = process.env.APP_URL || 'https://eggbtimerbit.onrender.com';
 app.use(express.json());
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-});
-
 let bot;
 try {
-  // Инициализируем бота в режиме webhook
-  bot = new TelegramBot(process.env.BOT_TOKEN, {
-    webHook: {
-      port: port
-    }
-  });
+  // Инициализируем бота без явного указания порта
+  bot = new TelegramBot(process.env.BOT_TOKEN);
 
   // Устанавливаем webhook
   bot.setWebHook(`${appUrl}/webhook/${process.env.BOT_TOKEN}`);
+
+  app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+  });
 
   // Обрабатываем webhook запросы
   app.post(`/webhook/${process.env.BOT_TOKEN}`, (req, res) => {
