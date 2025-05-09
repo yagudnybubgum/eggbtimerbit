@@ -200,12 +200,42 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      position: relative;
+    }
+
+    .announcement.hidden {
+      display: none;
     }
 
     .announcement svg {
       flex-shrink: 0;
       width: 20px;
       height: 20px;
+    }
+
+    .close-button {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      color: #007AFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .close-button:hover {
+      opacity: 1;
+    }
+
+    .announcement-content {
+      margin-right: 24px;
     }
   </style>
 </head>
@@ -269,11 +299,16 @@
     </div>
   </div>
 
-  <div class="announcement" data-en="Place eggs in boiling water" data-ru="Яйца нужно класть в кипящую воду">
+  <div class="announcement" id="cookingTip" data-en="Place eggs in boiling water" data-ru="Яйца нужно класть в кипящую воду">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z" fill="#007AFF"/>
     </svg>
-    Яйца нужно класть в кипящую воду
+    <span class="announcement-content">Яйца нужно класть в кипящую воду</span>
+    <button class="close-button" onclick="hideAnnouncement()" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="currentColor"/>
+      </svg>
+    </button>
   </div>
 
   <script>
@@ -284,6 +319,17 @@
     let activeButton = null;
     let currentLang = 'ru';
     
+    // Check if announcement was previously hidden
+    if (localStorage.getItem('announcementHidden') === 'true') {
+      document.getElementById('cookingTip').classList.add('hidden');
+    }
+
+    function hideAnnouncement() {
+      const announcement = document.getElementById('cookingTip');
+      announcement.classList.add('hidden');
+      localStorage.setItem('announcementHidden', 'true');
+    }
+
     const initData = new URLSearchParams(tg.initData);
     const chat_id = initData.get('user') ? JSON.parse(decodeURIComponent(initData.get('user'))).id : null;
 
