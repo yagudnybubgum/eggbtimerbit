@@ -9,91 +9,194 @@
     @import url('https://fonts.cdnfonts.com/css/comic-sans');
     
     body { 
-      font-family: 'Comic Sans MS', 'Comic Sans', cursive; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       text-align: center; 
-      background-color: white;
+      background-color: #f5f5f5;
       max-width: 500px;
       margin: 0 auto;
       padding: 20px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
     }
+
     h1 {
-      margin: 0 0 10px 0;
+      margin: 0 0 20px 0;
+      font-size: 28px;
+      color: #333;
+    }
+
+    .cards-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 20px;
+      padding: 0 20px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .cards-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-title {
       font-size: 24px;
+      font-weight: 600;
+      margin: 0;
+      color: #333;
     }
-    .timer { 
-      font-size: 72px; 
-      margin: 10px 0 20px 0; 
-      font-weight: bold; 
-      letter-spacing: 2px; 
+
+    .card-description {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
     }
-    .button {
-      display: block;
-      width: 280px;
-      margin: 8px auto;
-      padding: 12px 0;
+
+    .card-time {
+      color: #007AFF;
       font-size: 20px;
+      font-weight: 600;
+      margin: 5px 0;
+    }
+
+    .egg-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 18px;
       border-radius: 12px;
       border: none;
-      background: #007aff;
+      background: #007AFF;
       color: #fff;
       font-weight: 600;
-      box-shadow: 0 2px 8px #0001;
-      transition: background 0.2s;
-      line-height: 1.2;
-      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      transition: all 0.2s;
+      cursor: pointer;
     }
-    .button span {
-      display: block;
-      font-size: 16px;
-      font-weight: normal;
-      opacity: 0.8;
-      margin-top: 2px;
-    }
+
     .button:active {
-      background: #005bb5;
+      transform: scale(0.98);
+      background: #0056b3;
     }
+
+    .button.counting {
+      background: #28cd41;
+    }
+
     .button:disabled {
       background: #d1d1d6;
       color: #888;
-      box-shadow: none;
     }
-    #stopButton { background: #ff3b30; }
-    #stopButton:active { background: #b71c1c; }
-    #stopButton:disabled { background: #ffd6d6; color: #aaa; }
+
+    #stopButton {
+      margin-top: 20px;
+      background: #ff3b30;
+    }
+
+    #stopButton:active {
+      background: #d63030;
+    }
+
+    #stopButton:disabled {
+      background: #ffcdd2;
+    }
   </style>
 </head>
 <body>
-  <h1>Egg Timer</h1>
-  <div class="timer" id="timer">00:00</div>
-  <button class="button" onclick="startTimer(5)">Тест<span>(5 сек)</span></button>
-  <button class="button" onclick="startTimer(240)">Всмятку<span>(4 мин)</span></button>
-  <button class="button" onclick="startTimer(360)">В мешочек<span>(6 мин)</span></button>
-  <button class="button" onclick="startTimer(480)">Вкрутую<span>(8 мин)</span></button>
-  <button class="button" id="stopButton" onclick="stopTimer()">Стоп</button>
+  <h1>Egg Boiler Room</h1>
+  <div class="cards-container">
+    <div class="card">
+      <h2 class="card-title">Тест</h2>
+      <img src="https://i.ibb.co/VqGfXYw/test-egg.jpg" alt="Тестовое яйцо" class="egg-image">
+      <p class="card-description">Проверка таймера</p>
+      <div class="card-time">5 сек</div>
+      <button class="button" id="buttonTest" onclick="startTimer(5, this)">Старт</button>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Всмятку</h2>
+      <img src="https://i.ibb.co/k4BHqzk/soft-boiled.jpg" alt="Яйцо всмятку" class="egg-image">
+      <p class="card-description">Жидкий желток и не очень твёрдый белок</p>
+      <div class="card-time">5 мин</div>
+      <button class="button" id="button5" onclick="startTimer(300, this)">Старт</button>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">В мешочек</h2>
+      <img src="https://i.ibb.co/VxFyBt5/medium-boiled.jpg" alt="Яйцо в мешочек" class="egg-image">
+      <p class="card-description">Белок полностью схватился, а желток остался жидким</p>
+      <div class="card-time">7 мин</div>
+      <button class="button" id="button7" onclick="startTimer(420, this)">Старт</button>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Вкрутую</h2>
+      <img src="https://i.ibb.co/Ry1vF1n/hard-boiled.jpg" alt="Яйцо вкрутую" class="egg-image">
+      <p class="card-description">Белок и желток твёрдые</p>
+      <div class="card-time">9 мин</div>
+      <button class="button" id="button9" onclick="startTimer(540, this)">Старт</button>
+    </div>
+  </div>
+  
+  <button class="button" id="stopButton" onclick="stopTimer()" disabled>Стоп</button>
+
   <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
     let timerInterval, timeLeft;
+    let activeButton = null;
     
-    // Получаем chat_id из инициализационных данных
     const initData = new URLSearchParams(tg.initData);
     const chat_id = initData.get('user') ? JSON.parse(decodeURIComponent(initData.get('user'))).id : null;
 
-    function startTimer(seconds) {
+    function startTimer(seconds, buttonElement) {
+      if (activeButton) {
+        activeButton.classList.remove('counting');
+        activeButton.textContent = 'Старт';
+      }
+      
       timeLeft = seconds;
+      activeButton = buttonElement;
       document.getElementById('stopButton').disabled = false;
+      
+      // Disable all buttons
+      document.querySelectorAll('.button').forEach(btn => {
+        if (btn.id !== 'stopButton') btn.disabled = true;
+      });
+      
+      // Enable and style the active button
+      buttonElement.disabled = false;
+      buttonElement.classList.add('counting');
+      
       clearInterval(timerInterval);
+      updateButtonDisplay();
+      
       timerInterval = setInterval(() => {
         timeLeft--;
-        updateDisplay();
+        updateButtonDisplay();
+        
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          document.getElementById('stopButton').disabled = true;
-          // Отправляем уведомление на сервер
+          resetButtons();
           fetch('/timer-complete', {
             method: 'POST',
             headers: {
@@ -101,24 +204,34 @@
             },
             body: JSON.stringify({ chat_id })
           });
-          // Вибрация
           navigator.vibrate([200, 100, 200, 100, 200]);
         }
       }, 1000);
-      updateDisplay();
     }
+
     function stopTimer() {
       clearInterval(timerInterval);
-      document.getElementById('stopButton').disabled = true;
-      document.getElementById('timer').textContent = '00:00';
+      resetButtons();
     }
-    function updateDisplay() {
+
+    function resetButtons() {
+      if (activeButton) {
+        activeButton.classList.remove('counting');
+        activeButton.textContent = 'Старт';
+      }
+      document.getElementById('stopButton').disabled = true;
+      document.querySelectorAll('.button').forEach(btn => {
+        btn.disabled = false;
+      });
+      activeButton = null;
+    }
+
+    function updateButtonDisplay() {
+      if (!activeButton) return;
       const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
       const s = String(timeLeft % 60).padStart(2, '0');
-      document.getElementById('timer').textContent = `${m}:${s}`;
+      activeButton.textContent = `${m}:${s}`;
     }
-    // Инициализация: кнопка стоп неактивна
-    document.getElementById('stopButton').disabled = true;
   </script>
 </body>
 </html>
