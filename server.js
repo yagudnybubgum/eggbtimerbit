@@ -28,6 +28,17 @@ try {
     res.sendStatus(200);
   });
 
+  // Endpoint для получения уведомления о завершении таймера
+  app.post('/timer-complete', (req, res) => {
+    const { chat_id } = req.body;
+    if (chat_id) {
+      bot.sendMessage(chat_id, '🥚 Пора доставать яйца! Приятного аппетита!');
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  });
+
   // Команда /start
   bot.on('message', (msg) => {
     if (msg.text === '/start') {

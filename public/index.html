@@ -59,6 +59,11 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
     let timerInterval, timeLeft;
+    
+    // Получаем chat_id из инициализационных данных
+    const initData = new URLSearchParams(tg.initData);
+    const chat_id = initData.get('user') ? JSON.parse(decodeURIComponent(initData.get('user'))).id : null;
+
     function startTimer(seconds) {
       timeLeft = seconds;
       document.getElementById('stopButton').disabled = false;
@@ -68,9 +73,16 @@
         updateDisplay();
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          tg.sendData('Timer finished!');
           document.getElementById('stopButton').disabled = true;
-          // Vibrate three times
+          // Отправляем уведомление на сервер
+          fetch('/timer-complete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ chat_id })
+          });
+          // Вибрация
           navigator.vibrate([200, 100, 200, 100, 200]);
         }
       }, 1000);
