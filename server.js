@@ -4,47 +4,43 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const appUrl = process.env.APP_URL || 'https://eggbtimerbit.onrender.com';
 
+// Для webhook нужен bodyParser
+app.use(express.json());
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
 let bot;
 try {
-  bot = new TelegramBot(process.env.BOT_TOKEN, { 
-    polling: true,
-    // Добавляем параметры для избежания конфликтов
-    webHook: false,
-    testEnvironment: true
-  });
-
-  // Обработка ошибок polling
-  bot.on('polling_error', (error) => {
-    console.log('Polling error:', error.code);
-    if (error.code === 'ETELEGRAM' && error.message.includes('terminated by other getUpdates request')) {
-      console.log('Restarting polling...');
-      bot.stopPolling().then(() => {
-        setTimeout(() => {
-          bot.startPolling();
-        }, 10000);
-      });
+  // Инициализируем бота в режиме webhook
+  bot = new TelegramBot(process.env.BOT_TOKEN, {
+    webHook: {
+      port: port
     }
   });
 
+  // Устанавливаем webhook
+  bot.setWebHook(`${appUrl}/webhook/${process.env.BOT_TOKEN}`);
+
+  // Обрабатываем webhook запросы
+  app.post(`/webhook/${process.env.BOT_TOKEN}`, (req, res) => {
+    bot.handleUpdate(req.body);
+    res.sendStatus(200);
+  });
+
+  // Команда /start
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Welcome to Egg Timer! Use /timer to start.');
   });
 
+  // Команда /timer
   bot.onText(/\/timer/, (msg) => {
     const chatId = msg.chat.id;
-    const appUrl = process.env.APP_URL || 'https://eggbtimerbit.onrender.com';
     bot.sendMessage(chatId, 'Open the timer:', {
       reply_markup: {
         inline_keyboard: [[
@@ -53,6 +49,12 @@ try {
       }
     });
   });
+
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    console.log(`Webhook URL: ${appUrl}/webhook/${process.env.BOT_TOKEN}`);
+  });
+
 } catch (error) {
   console.error('Bot initialization error:', error);
 }
