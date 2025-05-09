@@ -51,6 +51,13 @@
       margin: 0 -20px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      justify-content: center;
+    }
+
+    @media (max-width: 320px) {
+      .cards-container {
+        justify-content: flex-start;
+      }
     }
 
     .cards-container::-webkit-scrollbar {
@@ -59,7 +66,7 @@
 
     .card {
       flex: 0 0 280px;
-      scroll-snap-align: start;
+      scroll-snap-align: center;
       background: white;
       border-radius: 16px;
       padding: 20px;
