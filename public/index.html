@@ -225,27 +225,67 @@
   <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
-    let timerInterval, timeLeft;
+    let timerInterval;
+    let timeLeft;
     let activeButton = null;
     let currentLang = 'ru';
     
     const initData = new URLSearchParams(tg.initData);
     const chat_id = initData.get('user') ? JSON.parse(decodeURIComponent(initData.get('user'))).id : null;
 
+    // Check for active timer on page load
+    window.addEventListener('load', checkStoredTimer);
+
+    // Update timer state when page becomes visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkStoredTimer();
+      }
+    });
+
+    function checkStoredTimer() {
+      const storedTimer = localStorage.getItem('eggTimer');
+      if (storedTimer) {
+        const { startTime, duration, buttonId } = JSON.parse(storedTimer);
+        const now = Date.now();
+        const elapsed = Math.floor((now - startTime) / 1000);
+        const remaining = duration - elapsed;
+
+        if (remaining > 0) {
+          // Resume timer
+          const button = document.getElementById(buttonId);
+          if (button) {
+            startTimer(remaining, button, false);
+          }
+        } else {
+          // Timer finished while app was closed
+          localStorage.removeItem('eggTimer');
+          if (chat_id) {
+            fetch('/timer-complete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ chat_id })
+            });
+          }
+        }
+      }
+    }
+
     function toggleLanguage() {
       currentLang = currentLang === 'ru' ? 'en' : 'ru';
       const langButton = document.querySelector('.lang-switch');
       langButton.textContent = currentLang === 'ru' ? 'EN' : 'RU';
       
-      // Update all translatable elements
       document.querySelectorAll('[data-ru]').forEach(elem => {
-        if (!elem.classList.contains('counting')) { // Don't update timer display
+        if (!elem.classList.contains('counting')) {
           elem.textContent = elem.getAttribute(`data-${currentLang}`);
         }
       });
     }
 
-    function startTimer(seconds, buttonElement) {
+    function startTimer(seconds, buttonElement, isNewTimer = true) {
       if (activeButton) {
         stopTimer(activeButton.nextElementSibling);
       }
@@ -253,18 +293,25 @@
       timeLeft = seconds;
       activeButton = buttonElement;
       
-      // Show stop button and update styles
       const stopButton = buttonElement.nextElementSibling;
       stopButton.classList.add('visible');
       buttonElement.classList.add('counting');
       
-      // Disable other start buttons
       document.querySelectorAll('.button').forEach(btn => {
         if (btn !== buttonElement) btn.disabled = true;
       });
       
       clearInterval(timerInterval);
       updateButtonDisplay();
+
+      // Store timer state
+      if (isNewTimer) {
+        localStorage.setItem('eggTimer', JSON.stringify({
+          startTime: Date.now(),
+          duration: seconds,
+          buttonId: buttonElement.id
+        }));
+      }
       
       timerInterval = setInterval(() => {
         timeLeft--;
@@ -273,13 +320,16 @@
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           resetButtons(stopButton);
-          fetch('/timer-complete', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ chat_id })
-          });
+          localStorage.removeItem('eggTimer');
+          if (chat_id) {
+            fetch('/timer-complete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ chat_id })
+            });
+          }
           navigator.vibrate([200, 100, 200, 100, 200]);
         }
       }, 1000);
@@ -288,16 +338,15 @@
     function stopTimer(stopButton) {
       clearInterval(timerInterval);
       resetButtons(stopButton);
+      localStorage.removeItem('eggTimer');
     }
 
     function resetButtons(stopButton) {
       if (activeButton) {
         activeButton.classList.remove('counting');
-        activeButton.textContent = 'Старт';
+        activeButton.textContent = activeButton.getAttribute(`data-${currentLang}`);
       }
-      // Hide stop button
       stopButton.classList.remove('visible');
-      // Enable all start buttons
       document.querySelectorAll('.button').forEach(btn => {
         btn.disabled = false;
       });
