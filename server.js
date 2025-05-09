@@ -24,26 +24,23 @@ try {
 
   // Обрабатываем webhook запросы
   app.post(`/webhook/${process.env.BOT_TOKEN}`, (req, res) => {
-    bot.handleUpdate(req.body);
+    bot.emit('message', req.body);
     res.sendStatus(200);
   });
 
   // Команда /start
-  bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'Welcome to Egg Timer! Use /timer to start.');
-  });
-
-  // Команда /timer
-  bot.onText(/\/timer/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'Open the timer:', {
-      reply_markup: {
-        inline_keyboard: [[
-          { text: 'Open Timer', web_app: { url: appUrl } }
-        ]]
-      }
-    });
+  bot.on('message', (msg) => {
+    if (msg.text === '/start') {
+      bot.sendMessage(msg.chat.id, 'Welcome to Egg Timer! Use /timer to start.');
+    } else if (msg.text === '/timer') {
+      bot.sendMessage(msg.chat.id, 'Open the timer:', {
+        reply_markup: {
+          inline_keyboard: [[
+            { text: 'Open Timer', web_app: { url: appUrl } }
+          ]]
+        }
+      });
+    }
   });
 
   app.listen(port, () => {
