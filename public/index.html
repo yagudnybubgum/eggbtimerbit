@@ -228,10 +228,17 @@
       justify-content: center;
       opacity: 0.7;
       transition: opacity 0.2s;
+      width: 16px;
+      height: 16px;
     }
 
     .close-button:hover {
       opacity: 1;
+    }
+
+    .close-button svg {
+      width: 12px;
+      height: 12px;
     }
 
     .announcement-content {
@@ -305,7 +312,7 @@
     </svg>
     <span class="announcement-content" data-en="Place eggs in boiling water" data-ru="Яйца нужно класть в кипящую воду">Яйца нужно класть в кипящую воду</span>
     <button class="close-button" onclick="hideAnnouncement()" aria-label="Close">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="currentColor"/>
       </svg>
     </button>
