@@ -326,15 +326,9 @@
     let activeButton = null;
     let currentLang = 'ru';
     
-    // Check if announcement was previously hidden
-    if (localStorage.getItem('announcementHidden') === 'true') {
-      document.getElementById('cookingTip').classList.add('hidden');
-    }
-
     function hideAnnouncement() {
       const announcement = document.getElementById('cookingTip');
       announcement.classList.add('hidden');
-      localStorage.setItem('announcementHidden', 'true');
     }
 
     const initData = new URLSearchParams(tg.initData);
