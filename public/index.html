@@ -324,6 +324,8 @@
     </button>
   </div>
 
+  <audio id="alarmSound" src="sound/alarm.mp3" preload="auto"></audio>
+
   <script>
     let tg = window.Telegram.WebApp;
     tg.expand();
@@ -437,6 +439,7 @@
               body: JSON.stringify({ chat_id })
             });
           }
+          document.getElementById('alarmSound').play();
           navigator.vibrate([200, 100, 200, 100, 200]);
         }
       }, 1000);
